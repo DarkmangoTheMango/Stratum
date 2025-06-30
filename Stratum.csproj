@@ -4,7 +4,13 @@
 	<Import Project="..\tModLoader.targets" />
 
 	<!-- General -->
-	
+	<PropertyGroup>
+
+	</PropertyGroup>
+
 	<!-- References -->
+	<ItemGroup>
+
+	</ItemGroup>
 
 </Project>
