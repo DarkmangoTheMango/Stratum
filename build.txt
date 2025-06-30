@@ -1,0 +1,3 @@
+displayName = Project Astral
+author = Darkmango, Touria J Stellar
+version = 0.1
