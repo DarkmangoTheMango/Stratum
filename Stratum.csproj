@@ -7,10 +7,18 @@
 	<PropertyGroup>
 
 	</PropertyGroup>
+	<ItemGroup>
+	  <AdditionalFiles Remove="Content\Projectiles\NewFolder\**" />
+	  <Compile Remove="Content\Projectiles\NewFolder\**" />
+	  <EmbeddedResource Remove="Content\Projectiles\NewFolder\**" />
+	  <None Remove="Content\Projectiles\NewFolder\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Common\Data\" />
+	  <Folder Include="Common\Players\" />
+	  <Folder Include="Content\Backgrounds\" />
+	</ItemGroup>
 
 	<!-- References -->
-	<ItemGroup>
-
-	</ItemGroup>
 
 </Project>

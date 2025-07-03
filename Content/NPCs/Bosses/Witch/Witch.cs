@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Stratum.Common.UI.BossBars;
 using Stratum.Common.Utilities;
+using Stratum.Content.Projectiles.Hostile;
 using Stratum.Core.Systems;
-using System.Data;
+using System;
+using Terraria;
 using Terraria.DataStructures;
 
 namespace Stratum.Content.NPCs.Bosses.Witch
@@ -10,63 +12,24 @@ namespace Stratum.Content.NPCs.Bosses.Witch
     [AutoloadBossHead]
     public class Witch : ModNPC
     {
-        public int shield;
-        public int shieldMax;
-
-        /// <summary>
-        /// Represents all possible AI states of the Witch.
-        /// </summary>
-        public enum AIState
+        enum AIState
         {
-            // Spawn
             Spawn,
-
-            // Phase 1
             Shield,
             Portal,
             Starshower,
             Shattered,
             Debris,
-
-            // Phase 2
             Solaris,
-
-            // Phase 3
             Astrea,
-
-            // Anti-cheat logic
             PhaseCheckpoint,
             HarmonyCheckpoint,
-
-            // Death
             Death
         }
 
-        /// <summary>
-        /// The current active behavior/attack pattern.
-        /// </summary>
-        public AIState State = AIState.Spawn;
+        AIState state = AIState.Spawn;
 
-        /// <summary>
-        /// The internal timer for the boss, used to control the timing of attacks and behaviors.
-        /// </summary>
-        public int bossTimer
-        {
-            get => (int)NPC.ai[0];
-            set => NPC.ai[0] = value;
-        }
-
-        /// <summary>
-        /// Sets the boss' internal timer to the specified value. returns 0 by default.
-        /// </summary>
-        /// <param name="value">The value to set the timer to.</param>
-        void SetBossTimer(int value = 0) => bossTimer = value;
-
-        /// <summary>
-        /// Checks if the boss' internal timer is equal to the specified value.
-        /// </summary>
-        /// <param name="value">The value to check.</param>
-        bool CheckBossTimer(int value = 0) => bossTimer == value;
+        Player player = null;
 
         public override void SetStaticDefaults()
         {
@@ -77,49 +40,37 @@ namespace Stratum.Content.NPCs.Bosses.Witch
 
         public override void SetDefaults()
         {
-            // Size and stats
-            NPC.Size = new(32);
+            NPC.Size = new(34, 48);
             NPC.damage = 0;
             NPC.knockBackResist = 0;
             NPC.defense = 777;
-            NPC.lifeMax = 1000000;
-            shieldMax = 100;
-
-            // Behavior flags
+            NPC.lifeMax = 2000000;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
             NPC.aiStyle = -1;
             NPC.npcSlots = 6;
-
-            // Boss properties
             NPC.boss = true;
             NPC.BossBar = ModContent.GetInstance<WitchBossBar>();
             NPC.value = Item.buyPrice(0, 5, 0, 0);
-
-            // Sounds
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
 
-            // Music
             if (!Main.dedServ)
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/Witch");
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            shield = shieldMax;
 
-            Main.musicFade[MusicLoader.GetMusicSlot(Mod, "Assets/Music/Witch")] = 1;
-            CameraSystem.ScreenFlash(1, 0.01f);
         }
 
         public override void AI()
         {
-            //Boss Behavior
-            Behavior();
+            NPC.TargetClosest(true);
+            NPC.spriteDirection = NPC.direction;
+            player = Main.player[NPC.target];
 
-            //AI State switching
-            switch (State)
+            switch (state)
             {
                 case AIState.Spawn:
                     Spawn();
@@ -151,187 +102,164 @@ namespace Stratum.Content.NPCs.Bosses.Witch
                 case AIState.HarmonyCheckpoint:
                     HarmonyCheckpoint();
                     break;
+                case AIState.Death:
+                    Death();
+                    break;
+                default:
+                    break;
             }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
-        void Behavior()
-        {
-            Lighting.AddLight(NPC.Center, new Vector3(0, 1, 1) * 1f);
-            UpdateShield();
-        }
+        #region AIStates
 
-        void UpdateShield()
-        {
-            if (shield > 0)
-            {
-                NPC.immortal = true;
-                NPC.dontTakeDamage = true;
-            }
-            else
-            {
-                NPC.immortal = false;
-                NPC.dontTakeDamage = false;
-            }
-        }
-
-        /// <summary>
-        /// Plays spawn animation and logic.
-        /// </summary>
         void Spawn()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I have spawned, bitch!");
-            }
+            NPC.dontTakeDamage = true;
+            NPC.ai[0]++;
 
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
+            Main.NewText("I'm in my spawn phase!");
+
+            if (NPC.ai[0] >= Mathematics.SecondsToTicks(2))
             {
-                State = AIState.Shield;
-                SetBossTimer();
+                state = AIState.Shield;
+                NPC.dontTakeDamage = false;
+                NPC.ai[0] = 0;
             }
         }
 
-        /// <summary>
-        /// Summons minions that protect the Witch.
-        /// </summary>
-        /// <param name="minionCount">ADD COMMENT</param>
-        void Shield(int minionCount = 1)
+        void Shield()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I have a shield, bitch!");
-            }
+            NPC.velocity *= 0.95f;
+            NPC.ai[0]++;
 
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
+            Main.NewText("I'm in my shield phase!");
+
+            if (NPC.ai[0] >= Mathematics.SecondsToTicks(5))
             {
-                State = AIState.Portal;
-                SetBossTimer();
+                state = AIState.Starshower;
+                NPC.ai[0] = 0;
             }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
-        /// <param name="cycles">ADD COMMENT</param>
-        /// <param name="predictionTime">ADD COMMENT</param>
-        /// <param name="delay">ADD COMMENT</param>
-        void Portal(int cycles = 1, float predictionTime = 120, float delay = 120)
+        void Portal()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I'm teleporting, bitch!");
-            }
-
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
-            {
-                State = AIState.Starshower;
-                SetBossTimer();
-            }
+            NPC.dontTakeDamage = true;
+            NPC.ai[0]++;
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void Starshower()
         {
-            if (CheckBossTimer())
+            NPC.ai[0]++;
+
+            Main.NewText("I'm in my starshower phase!");
+
+            if (player != null)
             {
-                Main.NewText("I have a starshower, bitch!");
+                Vector2 toPlayer = player.Center - NPC.Center;
+
+                // Smooth follow direction
+                float followSpeed = player.velocity.Length() * 0.9f; // Scales with player speed
+                float inertia = 20f;
+
+                Vector2 desiredVelocity = toPlayer.SafeNormalize(Vector2.Zero) * followSpeed;
+
+                // Bobbing effect
+                float bobSpeed = 0.15f; // Speed of bobbing
+                float bobHeight = 1.5f; // Height of bobbing
+                float bobOffset = (float)Math.Sin(Main.GameUpdateCount * bobSpeed) * bobHeight;
+
+                desiredVelocity.Y += bobOffset; // Apply bobbing vertically
+
+                NPC.velocity = (NPC.velocity * (inertia - 1) + desiredVelocity) / inertia;
             }
 
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
+            NPC.ai[1]++;
+
+            if (NPC.ai[1] >= 20 - NPC.ai[2])
             {
-                State = AIState.Shattered;
-                SetBossTimer();
+                Projectile.NewProjectileDirect(Entity.GetSource_FromAI(), player.Center + new Vector2(Main.rand.NextFloat(-Main.screenWidth, Main.screenWidth) * 0.5f, -Main.screenHeight), Vector2.UnitY * (10 + NPC.ai[2]), ModContent.ProjectileType<WitchStarfall>(), 100, 0, NPC.whoAmI);
+                NPC.ai[1] = 0;
+                NPC.ai[2] += 0.35f;
+            }
+
+            if (NPC.ai[0] >= Mathematics.SecondsToTicks(10))
+            {
+                state = AIState.Shield;
+                NPC.ai[0] = 0;
+                NPC.ai[2] = 0;
             }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void Shattered()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I'm shattered, bitch!");
-            }
 
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
+            if (player != null)
             {
-                State = AIState.Debris;
-                SetBossTimer();
+                Vector2 toPlayer = player.Center - NPC.Center;
+
+                // Smooth follow direction
+                float followSpeed = player.velocity.Length() * 0.9f; // Scales with player speed
+                float inertia = 20f;
+
+                Vector2 desiredVelocity = toPlayer.SafeNormalize(Vector2.Zero) * followSpeed;
+
+                // Bobbing effect
+                float bobSpeed = 0.15f; // Speed of bobbing
+                float bobHeight = 1.5f; // Height of bobbing
+                float bobOffset = (float)Math.Sin(Main.GameUpdateCount * bobSpeed) * bobHeight;
+
+                desiredVelocity.Y += bobOffset; // Apply bobbing vertically
+
+                NPC.velocity = (NPC.velocity * (inertia - 1) + desiredVelocity) / inertia;
             }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void Debris()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I have a debris, bitch!");
-            }
 
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
+            if (player != null)
             {
-                State = AIState.Solaris;
-                SetBossTimer();
+                Vector2 toPlayer = player.Center - NPC.Center;
+
+                // Smooth follow direction
+                float followSpeed = player.velocity.Length() * 0.9f; // Scales with player speed
+                float inertia = 20f;
+
+                Vector2 desiredVelocity = toPlayer.SafeNormalize(Vector2.Zero) * followSpeed;
+
+                // Bobbing effect
+                float bobSpeed = 0.15f; // Speed of bobbing
+                float bobHeight = 1.5f; // Height of bobbing
+                float bobOffset = (float)Math.Sin(Main.GameUpdateCount * bobSpeed) * bobHeight;
+
+                desiredVelocity.Y += bobOffset; // Apply bobbing vertically
+
+                NPC.velocity = (NPC.velocity * (inertia - 1) + desiredVelocity) / inertia;
             }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void Solaris()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I have a solaris, bitch!");
-            }
-
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
-            {
-                State = AIState.Astrea;
-                SetBossTimer();
-            }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void Astrea()
         {
-            if (CheckBossTimer())
-            {
-                Main.NewText("I have a astrea, bitch!");
-            } 
-
-            if (++bossTimer >= Mathematics.SecondsToTicks(2))
-            {
-                State = AIState.Shield;
-                SetBossTimer();
-            }
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void PhaseCheckpoint()
         {
-
         }
 
-        /// <summary>
-        /// ADD COMMENT
-        /// </summary>
         void HarmonyCheckpoint()
+        {
+        }
+
+        void Death()
         {
 
         }
+
+        #endregion
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {

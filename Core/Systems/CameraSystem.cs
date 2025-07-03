@@ -57,11 +57,7 @@ namespace Stratum.Core.Systems
         public override void PostDrawInterface(SpriteBatch spriteBatch)
         {
             if (FlashIntensity > 0f)
-            {
-                Texture2D tex = TextureAssets.MagicPixel.Value;
-
-                spriteBatch.Draw(tex, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * FlashIntensity);
-            }
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * FlashIntensity);
         }
 
         public override void PostUpdateEverything()

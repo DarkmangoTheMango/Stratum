@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\content\\projectiles\\hostile\\witchstarfall.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\projectiles\\hostile\\witchstarfall.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\content\\particles\\starparticle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\particles\\starparticle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\content\\npcs\\bosses\\witch\\witch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\npcs\\bosses\\witch\\witch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\common\\ui\\bossbars\\witchbossbar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:common\\ui\\bossbars\\witchbossbar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\core\\systems\\camerasystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:core\\systems\\camerasystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\stratum.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:stratum.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,56 +22,43 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "WitchBossBar.cs",
-              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Common\\UI\\BossBars\\WitchBossBar.cs",
-              "RelativeDocumentMoniker": "Common\\UI\\BossBars\\WitchBossBar.cs",
-              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Common\\UI\\BossBars\\WitchBossBar.cs",
-              "RelativeToolTip": "Common\\UI\\BossBars\\WitchBossBar.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAACYAAAAmAAAAAAAAAA==",
+              "Title": "StarParticle.cs",
+              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Particles\\StarParticle.cs",
+              "RelativeDocumentMoniker": "Content\\Particles\\StarParticle.cs",
+              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Particles\\StarParticle.cs",
+              "RelativeToolTip": "Content\\Particles\\StarParticle.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAswBcAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T05:44:46.601Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Stratum.csproj",
-              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Stratum.csproj",
-              "RelativeDocumentMoniker": "Stratum.csproj",
-              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Stratum.csproj",
-              "RelativeToolTip": "Stratum.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-06-29T23:55:09.176Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CameraSystem.cs",
-              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Core\\Systems\\CameraSystem.cs",
-              "RelativeDocumentMoniker": "Core\\Systems\\CameraSystem.cs",
-              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Core\\Systems\\CameraSystem.cs",
-              "RelativeToolTip": "Core\\Systems\\CameraSystem.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAowDsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-29T23:37:35.217Z",
+              "WhenOpened": "2025-07-03T01:04:04.423Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "WitchStarfall.cs",
+              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Projectiles\\Hostile\\WitchStarfall.cs",
+              "RelativeDocumentMoniker": "Content\\Projectiles\\Hostile\\WitchStarfall.cs",
+              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Projectiles\\Hostile\\WitchStarfall.cs",
+              "RelativeToolTip": "Content\\Projectiles\\Hostile\\WitchStarfall.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAEwCgAAACBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T01:41:56.177Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Witch.cs",
               "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\NPCs\\Bosses\\Witch\\Witch.cs",
               "RelativeDocumentMoniker": "Content\\NPCs\\Bosses\\Witch\\Witch.cs",
               "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\NPCs\\Bosses\\Witch\\Witch.cs",
               "RelativeToolTip": "Content\\NPCs\\Bosses\\Witch\\Witch.cs",
-              "ViewState": "AgIAAI8AAAAAAAAAAAAAAK8AAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAEcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-29T18:39:31.247Z",
               "EditorCaption": ""
