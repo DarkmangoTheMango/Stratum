@@ -1,17 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Stratum.Common.Utilities;
 
-namespace Stratum.Common.Utilities
+/// <summary>
+/// A collection of mathematical utilities and constants.
+/// </summary>
+public static class MathUtils
 {
-    /// <summary>
-    /// A collection of mathematical utilities and constants.
-    /// </summary>
-    public static class Mathematics
-    {
-        public static float SecondsToTicks(float value) => value * 60;
-    }
+    public static float SecondsToTicks(float value) => value * 60;
 }

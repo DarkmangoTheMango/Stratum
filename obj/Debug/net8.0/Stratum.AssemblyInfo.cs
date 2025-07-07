@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stratum")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+122395d96968d6138b9ec8ab78cb5c4cf59a756f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+70ef35344ece17cb3dac858eeb8fc7ebeccbb652")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stratum")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stratum")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

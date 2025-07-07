@@ -1,2 +1,9 @@
-NPCs.Witch.DisplayName: Celestial Witch, Stelstratum
-Projectiles.WitchStarfall.DisplayName: Witch Starfall
+NPCs: {
+	Witch.DisplayName: Celestial Witch, Stelstratum
+	WitchShield.DisplayName: Witch Shield
+}
+
+Projectiles: {
+	WitchStarfall.DisplayName: Witch Starfall
+	WitchMeteor.DisplayName: Witch Meteor
+}

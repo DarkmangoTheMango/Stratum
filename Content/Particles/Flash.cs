@@ -1,8 +1,8 @@
 ﻿namespace Stratum.Content.Particles;
 
-public class StarParticle : Particle
+public class Flash : Particle
 {
-    public override string Texture => "Stratum/Assets/Textures/Star";
+    public override string Texture => "Stratum/Assets/Textures/Bloom";
 
     public override void SetDefaults()
     {
@@ -13,8 +13,11 @@ public class StarParticle : Particle
 
     public override void AI()
     {
-        velocity *= 0.9f;
-        scale *= 0.9f;
+        Scale += 0.5f;
+
+        opacity -= 0.1f;
+        if (opacity < 0)
+            opacity = 0;
     }
 
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 drawPos, Color lightColor)
@@ -28,10 +31,8 @@ public class StarParticle : Particle
         float t = (float)(Math.Sin(Main.GameUpdateCount * 0.5f) * 0.5f + 0.5f);
         Color interpolatedColor = Color.Lerp(new(0, 0, 255, 0), new(0, 255, 255, 0), t);
 
-        Main.EntitySpriteDraw(texture, drawPosition, texture.Frame(), interpolatedColor, rotation, texture.Frame().Size() * 0.5f, scale * pulse, SpriteEffects.None, 0f);
+        Main.EntitySpriteDraw(texture, drawPosition, texture.Frame(), interpolatedColor * opacity, rotation, texture.Frame().Size() * 0.5f, scale * pulse, SpriteEffects.None, 0f);
 
-        Color color = new(255, 255, 255, 0);
-        Main.EntitySpriteDraw(texture, drawPosition, texture.Frame(), color, rotation, texture.Frame().Size() * 0.5f, (scale * pulse) * 0.9f, SpriteEffects.None, 0f);
 
         return false;
     }

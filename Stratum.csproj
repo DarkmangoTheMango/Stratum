@@ -1,24 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<!-- Import tModLoader mod properties -->
 	<Import Project="..\tModLoader.targets" />
-
+	
 	<!-- General -->
 	<PropertyGroup>
-
+		<FxcCompilerPath>Assets/Effects/Compiler/fxc.exe</FxcCompilerPath>
 	</PropertyGroup>
-	<ItemGroup>
-	  <AdditionalFiles Remove="Content\Projectiles\NewFolder\**" />
-	  <Compile Remove="Content\Projectiles\NewFolder\**" />
-	  <EmbeddedResource Remove="Content\Projectiles\NewFolder\**" />
-	  <None Remove="Content\Projectiles\NewFolder\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Common\Data\" />
-	  <Folder Include="Common\Players\" />
-	  <Folder Include="Content\Backgrounds\" />
-	</ItemGroup>
-
+	
 	<!-- References -->
-
+	<ItemGroup>
+		<EffectFiles Include="**/*.fx" />
+	</ItemGroup>
+	
+	<Target Name="BuildEffects" BeforeTargets="BuildMod" Condition="$([MSBuild]::IsOSPlatform('Windows'))" Inputs="@(EffectFiles->'%(RecursiveDir)%(FileName)%(Extension)')" Outputs="@(EffectFiles->'%(RecursiveDir)%(FileName).fxc')">
+		<!-- echo is here so it tells which file is being compiled -->
+		<Exec Command="@(EffectFiles->'echo &quot;-----Compiling effect %(RecursiveDir)%(FileName)%(Extension)-----&quot; &amp;&amp; &quot;$(FxcCompilerPath)&quot; &quot;%(RecursiveDir)%(FileName)%(Extension)&quot; /T fx_2_0 /nologo /Fo &quot;%(RecursiveDir)%(FileName).fxc&quot; &#xA;&#xD;')" IgnoreExitCode="true" />
+	</Target>
 </Project>
