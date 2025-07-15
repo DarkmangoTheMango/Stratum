@@ -1,9 +1,8 @@
-NPCs: {
-	Witch.DisplayName: Celestial Witch, Stelstratum
-	WitchShield.DisplayName: Witch Shield
+Projectiles: {
+	BurningStar.DisplayName: Burning Star
+	Supernova.DisplayName: Supernova
+	SolarFlare.DisplayName: Solar Flare
+	DeadlyLaser.DisplayName: Deadly Laser
 }
 
-Projectiles: {
-	WitchStarfall.DisplayName: Witch Starfall
-	WitchMeteor.DisplayName: Witch Meteor
-}
+NPCs.CelestialWitch.DisplayName: Celestial Witch

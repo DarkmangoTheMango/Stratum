@@ -1,3 +1,4 @@
 displayName = Stratum
 author = Darkmango, Touria J. Stellar
 version = 0.1
+weakReferences = CalamityMod

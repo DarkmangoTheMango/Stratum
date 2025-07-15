@@ -1,4 +1,6 @@
-﻿using Terraria.GameContent;
+﻿using System.Collections.Generic;
+using Terraria.GameContent;
+using Terraria.UI;
 
 namespace Stratum.Core.Systems;
 
@@ -52,11 +54,30 @@ public class CameraSystem : ModSystem
     static float FlashIntensity = 0f;
     static float FlashFade = 0f;
 
-    public override void PostDrawInterface(SpriteBatch spriteBatch)
+    public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
-        if (FlashIntensity > 0f)
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * FlashIntensity);
+        int index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Map / Minimap"));
+        if (index != -1)
+        {
+            layers.Insert(index, new LegacyGameInterfaceLayer(
+                "Stratum: Screen Flash",
+                delegate
+                {
+                    if (FlashIntensity > 0f)
+                    {
+                        Main.spriteBatch.End();
+                        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
+                        Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * FlashIntensity);
+                        Main.spriteBatch.End();
+                        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
+                    }
+                    return true;
+                },
+                InterfaceScaleType.UI)
+            );
+        }
     }
+
 
     public override void PostUpdateEverything()
     {

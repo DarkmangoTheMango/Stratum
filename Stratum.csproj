@@ -11,6 +11,14 @@
 	<ItemGroup>
 		<EffectFiles Include="**/*.fx" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Assets\Music\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="CalamityMod">
+	    <HintPath>..\ModAssemblies\CalamityMod.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 	
 	<Target Name="BuildEffects" BeforeTargets="BuildMod" Condition="$([MSBuild]::IsOSPlatform('Windows'))" Inputs="@(EffectFiles->'%(RecursiveDir)%(FileName)%(Extension)')" Outputs="@(EffectFiles->'%(RecursiveDir)%(FileName).fxc')">
 		<!-- echo is here so it tells which file is being compiled -->

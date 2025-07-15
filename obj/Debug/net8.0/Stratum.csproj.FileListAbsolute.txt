@@ -230,3 +230,4 @@ C:\Users\Skyle\Documents\My Games\Terraria\tModLoader\ModSources\Stratum\obj\Deb
 C:\Users\Skyle\Documents\My Games\Terraria\tModLoader\ModSources\Stratum\obj\Debug\net8.0\Stratum.pdb
 C:\Users\Skyle\Documents\My Games\Terraria\tModLoader\ModSources\Stratum\obj\Debug\net8.0\ref\Stratum.dll
 C:\Users\Skyle\Documents\My Games\Terraria\tModLoader\ModSources\Stratum\obj\Debug\net8.0\Stratum.sourcelink.json
+C:\Users\Skyle\Documents\My Games\Terraria\tModLoader\ModSources\Stratum\bin\Debug\net8.0\CalamityMod.dll

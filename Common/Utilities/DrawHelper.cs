@@ -2,5 +2,5 @@
 
 public static class DrawHelper
 {
-    public static SpriteEffects ToHorizontalFlip(this int value) => value == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+    public static SpriteEffects ToSpriteEffect(this int value, SpriteEffects spriteEffect) => value > 0 ? SpriteEffects.None : spriteEffect;
 }
