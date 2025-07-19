@@ -9,7 +9,7 @@ namespace Stratum.Content.NPCs.Bosses.Witch;
 [AutoloadBossHead]
 public class CelestialWitch : ModNPC
 {
-    Player target => Main.player[NPC.target];
+    Player Target => Main.player[NPC.target];
 
     enum AIState
     {
@@ -19,7 +19,7 @@ public class CelestialWitch : ModNPC
         Death
     }
 
-    AIState aiState = AIState.Spawning;
+    //AIState aiState = AIState.Spawning;
 
     public override void SetStaticDefaults()
     {
@@ -41,7 +41,7 @@ public class CelestialWitch : ModNPC
         NPC.noGravity = true;
         NPC.aiStyle = -1;
         NPC.boss = true;
-        NPC.HitSound = new SoundStyle(Stratum.SoundPath + "/NPCHit/CelestialWitch_Hit_") with { PitchVariance = 0.2f, MaxInstances = 5, Variants = [0, 1, 2] };
+        NPC.HitSound = new SoundStyle(AssetUtils.SoundPath + "/NPCHit/CelestialWitch_Hit_") with { PitchVariance = 0.2f, MaxInstances = 5, Variants = [0, 1, 2] };
 
         if (!Main.dedServ)
             Music = MusicID.EmpressOfLight;
@@ -56,7 +56,7 @@ public class CelestialWitch : ModNPC
 
     public override void OnSpawn(IEntitySource source)
     {
-        SoundEngine.PlaySound(new SoundStyle(Stratum.SoundPath + "/Custom/Witch/WitchLaugh"));
+        SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/WitchLaugh"));
         CameraSystem.ScreenShake(30, 0.9f, NPC.Center);
 
         for (int i = 0; i < 20; i++)
@@ -75,7 +75,7 @@ public class CelestialWitch : ModNPC
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Texture2D glowTexture = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
 
-        Color glowColor = new Color(255, 255, 255, 0);
+        Color glowColor = new(255, 255, 255, 0);
 
         Main.EntitySpriteDraw(texture, NPC.Center - screenPos, texture.Bounds, drawColor, NPC.rotation, texture.Size() / 2, NPC.scale, NPC.spriteDirection.ToSpriteEffect(SpriteEffects.FlipHorizontally), 0);
         Main.EntitySpriteDraw(glowTexture, NPC.Center - screenPos, texture.Bounds, NPC.GetAlpha(glowColor), NPC.rotation, texture.Size() / 2, NPC.scale, NPC.spriteDirection.ToSpriteEffect(SpriteEffects.FlipHorizontally), 0);
@@ -92,6 +92,6 @@ public class CelestialWitch : ModNPC
 
         Texture2D texture = ModContent.Request<Texture2D>(Texture + "_Glow2").Value;
 
-        Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, texture.Bounds, color, NPC.rotation, texture.Size() / 2, NPC.scale, NPC.spriteDirection.ToSpriteEffect(SpriteEffects.FlipHorizontally), 0);
+        Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, texture.Bounds, color * intensity, NPC.rotation, texture.Size() / 2, NPC.scale, NPC.spriteDirection.ToSpriteEffect(SpriteEffects.FlipHorizontally), 0);
     }
 }

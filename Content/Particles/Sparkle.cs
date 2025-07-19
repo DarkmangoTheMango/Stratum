@@ -3,7 +3,7 @@ namespace Stratum.Content.Particles;
 
 public class Sparkle : Particle
 {
-    public override string Texture => Stratum.AssetPath + "/Textures/Light";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Light";
 
     public override void SetDefaults()
     {

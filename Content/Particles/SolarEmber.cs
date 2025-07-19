@@ -13,7 +13,7 @@ public class SolarEmber : Particle
     bool initialized = false;
     float initialSpeed = 0f;
 
-    public override string Texture => Stratum.AssetPath + "/Textures/Pixel";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Pixel";
 
     public override void SetDefaults()
     {
@@ -57,14 +57,14 @@ public class SolarEmber : Particle
 
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
 
-        Main.EntitySpriteDraw(texture, Center - Main.screenPosition, texture.Bounds, new Color(255, 255, 128, 0), rotation, texture.Size() * 0.5f, scale * DrawScale, SpriteEffects.None, 0f);
+        Main.EntitySpriteDraw(texture, Center - Main.screenPosition, texture.Bounds, new Color(255, 255, 128, 0), rotation, texture.Size() * 0.5f, Math.Clamp(Scale * 2, 0, 2), SpriteEffects.None, 0f);
 
         return false;
     }
     
     void DrawBloom()
     {
-        Texture2D texture = ModContent.Request<Texture2D>(Stratum.AssetPath + "/Textures/Bloom").Value;
+        Texture2D texture = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/Bloom").Value;
 
         Main.EntitySpriteDraw(texture, Center - Main.screenPosition, texture.Bounds, new Color(255, 128, 0, 0) * 0.5f, rotation, texture.Size() * 0.5f, scale * BloomScaleMultiplier, SpriteEffects.None, 0f);
     }

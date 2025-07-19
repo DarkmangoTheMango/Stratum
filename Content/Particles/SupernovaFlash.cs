@@ -10,7 +10,7 @@ public class SupernovaFlash : Particle
     const float OuterScale = 4f;
     const float InnerScale = 3f;
 
-    public override string Texture => Stratum.AssetPath + "/Textures/Star";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Star";
 
     public override void SetDefaults()
     {

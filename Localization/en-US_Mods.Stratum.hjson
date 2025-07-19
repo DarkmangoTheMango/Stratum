@@ -6,3 +6,10 @@ Projectiles: {
 }
 
 NPCs.CelestialWitch.DisplayName: Celestial Witch
+
+Buffs: {
+	Sunburn: {
+		DisplayName: Sunburnt
+		Description: lotion won't fix this one...
+	}
+}

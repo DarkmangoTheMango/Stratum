@@ -1,4 +1,305 @@
-﻿using ReLogic.Utilities;
+﻿using ReLogic.Content;
+using ReLogic.Utilities;
+using Stratum.Content.Particles;
+using System.IO;
+using Terraria.Audio;
+using Terraria.DataStructures;
+
+namespace Stratum.Content.Projectiles.Witch;
+
+public class BurningStar : ModProjectile
+{
+    enum AIState
+    {
+        Spawning,
+        SolarFlare,
+        Collapse,
+        DeadlyLaser,
+        Supernova
+    }
+
+    AIState state = AIState.Spawning;
+
+    SlotId soundSlot;
+
+    ref float PhaseTimer => ref Projectile.ai[0];
+    ref float AttackTimer => ref Projectile.ai[1];
+    ref float Intensity => ref Projectile.ai[2];
+
+    float radius;
+
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Noise/TurbulentNoise";
+
+    public override void SetStaticDefaults()
+    {
+
+    }
+
+    public override void SetDefaults()
+    {
+        Projectile.Size = new(512);
+
+        Projectile.penetrate = -1;
+        Projectile.hostile = true;
+        Projectile.ignoreWater = true;
+        Projectile.tileCollide = false;
+
+        Projectile.netImportant = true;
+        Projectile.aiStyle = -1;
+
+        CooldownSlot = ImmunityCooldownID.Bosses;
+    }
+
+    public override void OnSpawn(IEntitySource source)
+    {
+        radius = Projectile.width / 2f;
+        Projectile.netUpdate = true;
+    }
+
+    public override void AI()
+    {
+        switch (state)
+        {
+            case AIState.Spawning:
+                Spawning();
+                break;
+            case AIState.SolarFlare:
+                SolarFlare();
+                break;
+            case AIState.Collapse:
+                Collapse(180f);
+                break;
+            case AIState.DeadlyLaser:
+                DeadlyLaser(300f);
+                break;
+            case AIState.Supernova:
+                Supernova();
+                break;
+            default:
+                break;
+        }
+    }
+
+    #region AI States
+
+    void Spawning()
+    {
+        SetState(AIState.SolarFlare);
+    }
+
+    void SolarFlare()
+    {
+        const int fadeInDuration = 10;
+        int elapsed = 300 - Projectile.timeLeft;
+        float progress = MathHelper.Clamp(elapsed / (float)fadeInDuration, 0f, 1f);
+
+        Lighting.AddLight(Projectile.Center, new Color(255, 128, 0).ToVector3() * 5f * Projectile.scale);
+
+        if (AttackTimer >= 20)
+        {
+            Player target2 = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
+            float projectileSpeed = 30f;
+
+            // Estimate travel time to the player
+            float distance2 = Vector2.Distance(Projectile.Center, target2.Center);
+            float estimatedTime = distance2 / projectileSpeed * 2;
+
+            // Predict future position
+            Vector2 predictedPosition = target2.Center + target2.velocity * estimatedTime;
+
+            // Direction toward predicted position
+            Vector2 toFuturePos = predictedPosition - Projectile.Center;
+            Vector2 baseDirection = toFuturePos.SafeNormalize(Vector2.UnitY);
+
+            // Add spread by rotating the base direction randomly within ±60 degrees
+            float spread = MathHelper.ToRadians(60f);
+            float angleOffset = Main.rand.NextFloat(-spread, spread);
+            Vector2 finalDirection = baseDirection.RotatedBy(angleOffset);
+
+            Vector2 spawnVelocity = finalDirection * projectileSpeed;
+
+            // Spawn position at edge of sun
+            Vector2 spawnOffset = finalDirection * (Projectile.width / 3f);
+            Vector2 spawnPosition = Projectile.Center + spawnOffset;
+
+            // Spawn the SolarFlare
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPosition, spawnVelocity, ModContent.ProjectileType<SolarFlare>(), 200, 0f, Main.myPlayer);
+
+            // Burst of ember particles in that direction
+            int emberCount = Main.rand.Next(10, 15);
+            for (int i = 0; i < emberCount; i++)
+            {
+                float emberAngle = Main.rand.NextFloat(-0.25f, 0.25f);
+                Vector2 emberVelocity = finalDirection.RotatedBy(emberAngle) * Main.rand.NextFloat(6f, 14f);
+                float emberScale = Main.rand.NextFloat(2f, 3f);
+
+                ParticleManager.NewParticle<SolarEmber>(spawnPosition, emberVelocity, default, emberScale);
+            }
+
+            AttackTimer = 0;
+        }
+
+        ++PhaseTimer;
+        ++AttackTimer;
+
+        if (PhaseTimer >= 300)
+            SetState(AIState.Collapse);
+    }
+
+    void Collapse(float duration)
+    {
+        if (PhaseTimer == 0)
+            SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_Collapse"), Projectile.Center);
+
+        float progress = MathHelper.Clamp(PhaseTimer / duration, 0f, 1f);
+        float eased = 0.5f - 0.5f * MathF.Cos(MathHelper.Pi * progress);
+
+        Projectile.scale = MathHelper.Lerp(1f, 0.2f, eased);
+
+        if (progress >= 0.7f && PhaseTimer % 10 == 0)
+        {
+            for (int i = 0; i < 5; i++)
+                ParticleManager.NewParticle<StarCollapseFlash>(Projectile.Center, Vector2.Zero, default, 0, 0.15f, Projectile.whoAmI);
+        }
+
+        int maxParticles = 4;
+        int minParticles = 1;
+        float spawnProgress = MathF.Pow(progress, 2.5f);
+        int count = (int)MathHelper.Lerp(minParticles, maxParticles, spawnProgress);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector2 offset = Main.rand.NextVector2Circular(1f, 1f).SafeNormalize(Vector2.UnitY) * Main.rand.NextFloat(160f, 1000f);
+            Vector2 position = Projectile.Center + offset;
+            Vector2 toCenter = (Projectile.Center - position).SafeNormalize(Vector2.UnitY);
+            float pull = MathHelper.Lerp(5f, 20f, spawnProgress);
+            Vector2 velocity = toCenter * Main.rand.NextFloat(1f, 2f) * pull;
+
+            ParticleManager.NewParticle<SolarEmber>(position, velocity, default, 1f);
+        }
+
+        ++PhaseTimer;
+        ++AttackTimer;
+
+        if (PhaseTimer >= duration)
+            SetState(AIState.DeadlyLaser);
+    }
+
+    void DeadlyLaser(float duration)
+    {
+        if (PhaseTimer == 0)
+        {
+            SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_DeadlyLaserFire"), Projectile.Center);
+            Projectile.NewProjectile(Entity.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<DeadlyLaser>(), 200, 0, Main.myPlayer, Projectile.whoAmI);
+        }
+
+        if (!SoundEngine.TryGetActiveSound(soundSlot, out _))
+        {
+            var tracker = new ProjectileAudioTracker(Projectile);
+
+            soundSlot = SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_DeadlyLaserLoop")
+            {
+                IsLooped = true,
+                SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
+            }, Projectile.Center, soundInstance =>
+            {
+                soundInstance.Position = Projectile.Center;
+                return tracker.IsActiveAndInGame() && state == AIState.DeadlyLaser;
+            });
+        }
+        float progress = MathHelper.Clamp(PhaseTimer / duration, 0f, 1f);
+
+        if (PhaseTimer % 10 == 0)
+        {
+            for (int i = 0; i < 5; i++)
+                ParticleManager.NewParticle<StarCollapseFlash>(Projectile.Center, Vector2.Zero, default, 0, 0.15f, Projectile.whoAmI);
+        }
+
+        int count = 4;
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector2 offset = Main.rand.NextVector2Circular(1f, 1f).SafeNormalize(Vector2.UnitY) * Main.rand.NextFloat(160f, 1000f);
+            Vector2 position = Projectile.Center + offset;
+            Vector2 toCenter = (Projectile.Center - position).SafeNormalize(Vector2.UnitY);
+            float pull = 20f;
+            Vector2 velocity = toCenter * Main.rand.NextFloat(1f, 2f) * pull;
+
+            ParticleManager.NewParticle<SolarEmber>(position, velocity, default, 1f);
+        }
+
+        ++PhaseTimer;
+        ++AttackTimer;
+
+        if (PhaseTimer >= duration)
+            SetState(AIState.Supernova);
+    }
+
+    void Supernova()
+    {
+        Main.NewText("I'm in my supernova phase!");
+
+        if (++PhaseTimer >= 60)
+            Projectile.Kill();
+    }
+
+    void SetState(AIState newState)
+    {
+        state = newState;
+        PhaseTimer = 0;
+        AttackTimer = 0;
+
+        Projectile.netUpdate = true;
+    }
+
+    #endregion
+
+    public override bool PreDraw(ref Color lightColor)
+    {
+        DrawBloom(MathUtils.RandomVector2Circular(MathHelper.Lerp(0f, 10, 1f - Projectile.scale)));
+
+        Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+        Effect shader = ShaderManager.BurningStarShader.Value;
+
+        DrawHelper.WithShader(shader, () =>
+        {
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + MathUtils.RandomVector2Circular(MathHelper.Lerp(0f, 10, 1f - Projectile.scale)), texture.Bounds, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+            shader.Parameters["uTime"].SetValue(Main.GameUpdateCount / 60f);
+        });
+
+        return false;
+    }
+
+    void DrawBloom(Vector2 offset)
+    {
+        Texture2D bloom = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/Bloom").Value;
+        Texture2D flare = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/RadialFlare").Value;
+
+        Color tint = new Color(255, 128, 0, 0);
+
+        for (int i = 0; i < 5; i++)
+            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition + offset, bloom.Bounds, Projectile.GetAlpha(tint), Projectile.rotation, bloom.Size() * 0.5f, 0.9f * Projectile.scale, SpriteEffects.None, 0);
+
+        float flareScale = 1.8f * Projectile.scale;
+        float rotationSpeed = Main.GameUpdateCount * 0.01f;
+
+        Main.EntitySpriteDraw(flare, Projectile.Center - Main.screenPosition + offset, flare.Bounds, Projectile.GetAlpha(tint), Projectile.rotation + rotationSpeed, flare.Size() * 0.5f, flareScale, SpriteEffects.None, 0);
+        Main.EntitySpriteDraw(flare, Projectile.Center - Main.screenPosition + offset, flare.Bounds, Projectile.GetAlpha(tint), Projectile.rotation - rotationSpeed, flare.Size() * 0.5f, flareScale * 0.9f, SpriteEffects.None, 0);
+    }
+
+    public override void SendExtraAI(BinaryWriter writer)
+    {
+        writer.Write((int)state);
+    }
+
+    public override void ReceiveExtraAI(BinaryReader reader)
+    {
+        state = (AIState)reader.ReadInt32();
+    }
+}
+
+/*using ReLogic.Utilities;
 using Stratum.Content.Particles;
 using Terraria.Audio;
 
@@ -6,14 +307,16 @@ namespace Stratum.Content.Projectiles.Witch;
 
 public class BurningStar : ModProjectile
 {
-    enum BehaviorMode
+    enum State
     {
         Spawn,
-        Attack,
-        Death
+        SolarFlare,
+        Collapse,
+        DeadlyLaser,
+        Supernova
     }
 
-    BehaviorMode currentMode = BehaviorMode.Spawn;
+    State state = State.Spawn;
 
     int deathAnimationTimer = 0;
 
@@ -29,13 +332,13 @@ public class BurningStar : ModProjectile
     int attackProjectileSpawnTimer = 0;
     int attackProjectileSpawnInterval = 40; // ticks between spawns
 
-    public override string Texture => Stratum.AssetPath + "/Textures/Noise/TurbulentNoise";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Noise/TurbulentNoise";
 
     public override void SetDefaults()
     {
-        Projectile.Size = new Vector2(480f);
+        Projectile.Size = new(480f);
         Projectile.scale = 1f;
-        Projectile.timeLeft = 300;
+        Projectile.timeLeft = 3000;
 
         Projectile.penetrate = -1;
         Projectile.hostile = true;
@@ -46,17 +349,17 @@ public class BurningStar : ModProjectile
 
     public override void AI()
     {
-        switch (currentMode)
+        switch (state)
         {
-            case BehaviorMode.Spawn:
+            case State.Spawn:
                 EnterAttackPhase();
                 break;
 
-            case BehaviorMode.Attack:
+            case State.SolarFlare:
                 UpdateAttackPhase();
                 break;
 
-            case BehaviorMode.Death:
+            case State.Death:
                 UpdateDeathPhase();
                 break;
         }
@@ -64,7 +367,7 @@ public class BurningStar : ModProjectile
 
     void EnterAttackPhase()
     {
-        currentMode = BehaviorMode.Attack;
+        state = State.SolarFlare;
     }
 
     void UpdateAttackPhase()
@@ -111,18 +414,10 @@ public class BurningStar : ModProjectile
             Vector2 spawnPosition = Projectile.Center + spawnOffset;
 
             // Spawn the SolarFlare
-            Projectile.NewProjectile(
-                Projectile.GetSource_FromAI(),
-                spawnPosition,
-                spawnVelocity,
-                ModContent.ProjectileType<SolarFlare>(),
-                200,
-                0f,
-                Projectile.owner
-            );
+            //Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPosition, spawnVelocity, ModContent.ProjectileType<SolarFlare>(), 200, 0f, Projectile.owner);
 
             // Burst of ember particles in that direction
-            int emberCount = Main.rand.Next(10, 15);
+            /*int emberCount = Main.rand.Next(10, 15);
             for (int i = 0; i < emberCount; i++)
             {
                 float emberAngle = Main.rand.NextFloat(-0.25f, 0.25f);
@@ -163,11 +458,11 @@ public class BurningStar : ModProjectile
 
     void TriggerDeath()
     {
-        if (currentMode != BehaviorMode.Death)
+        if (state != State.Death)
         {
-            currentMode = BehaviorMode.Death;
+            state = State.Death;
             Projectile.timeLeft = int.MaxValue;
-            SoundEngine.PlaySound(new SoundStyle(Stratum.SoundPath + "/Custom/Witch/SolarHellstorm_Collapse"), Projectile.Center);
+            SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_Collapse"), Projectile.Center);
         }
     }
 
@@ -282,7 +577,7 @@ public class BurningStar : ModProjectile
         {
             var tracker = new ProjectileAudioTracker(Projectile);
 
-            soundSlot = SoundEngine.PlaySound(new SoundStyle(Stratum.SoundPath + "/Custom/Witch/SolarHellstorm_SolarWindsLoop")
+            soundSlot = SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_BurningStarLoop")
             {
                 IsLooped = true,
                 SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
@@ -320,8 +615,8 @@ public class BurningStar : ModProjectile
 
     void DrawBloom(Vector2 offset)
     {
-        Texture2D bloom = ModContent.Request<Texture2D>(Stratum.AssetPath + "/Textures/Bloom").Value;
-        Texture2D flare = ModContent.Request<Texture2D>(Stratum.AssetPath + "/Textures/RadialFlare").Value;
+        Texture2D bloom = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/Bloom").Value;
+        Texture2D flare = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/RadialFlare").Value;
 
         Color tint = new Color(255, 128, 0, 0);
 
@@ -335,3 +630,4 @@ public class BurningStar : ModProjectile
         Main.EntitySpriteDraw(flare, Projectile.Center - Main.screenPosition + offset, flare.Bounds, Projectile.GetAlpha(tint), Projectile.rotation - rotationSpeed, flare.Size() * 0.5f, flareScale * 0.9f, SpriteEffects.None, 0);
     }
 }
+*/

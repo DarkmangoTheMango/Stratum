@@ -14,7 +14,7 @@ public class StarCollapseFlash : Particle
     const float OpacityFadeRate = 0.05f;
     const float DrawScale = 4f;
 
-    public override string Texture => Stratum.AssetPath + "/Textures/Bloom";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Bloom";
 
     public override void SetDefaults()
     {

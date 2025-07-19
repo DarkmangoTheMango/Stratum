@@ -8,7 +8,7 @@ public class CameraSystem : ModSystem
 {
     static float ShakeIntensity = 0f;
     static float ShakeFade = 0.9f;
-    static Vector2? ShakeSource = null; // Nullable, used only when relevant
+    static Vector2? ShakeSource = null;
 
     public override void ModifyScreenPosition()
     {
@@ -19,7 +19,7 @@ public class CameraSystem : ModSystem
             if (ShakeSource.HasValue && Main.LocalPlayer != null && Main.LocalPlayer.active)
             {
                 float distance = Vector2.Distance(Main.LocalPlayer.Center, ShakeSource.Value);
-                float maxDistance = 1000f; // beyond this, no shake
+                float maxDistance = 1000f;
                 float falloff = 1f - MathHelper.Clamp(distance / maxDistance, 0f, 1f);
 
                 effectiveIntensity *= falloff;
@@ -39,7 +39,7 @@ public class CameraSystem : ModSystem
     }
 
     /// <summary>
-    /// Call this to trigger a screen shake.
+    /// Triggers a simple screen shake effect.
     /// </summary>
     /// <param name="intensity">Base intensity of the shake</param>
     /// <param name="fade">The amount of shake changed per frame</param>
@@ -67,7 +67,9 @@ public class CameraSystem : ModSystem
                     {
                         Main.spriteBatch.End();
                         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
+
                         Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * FlashIntensity);
+
                         Main.spriteBatch.End();
                         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
                     }
@@ -77,7 +79,6 @@ public class CameraSystem : ModSystem
             );
         }
     }
-
 
     public override void PostUpdateEverything()
     {

@@ -15,7 +15,7 @@ public class Supernova : ModProjectile
     
     float intensity;
 
-    public override string Texture => Stratum.AssetPath + "/Textures/Noise/TurbulentNoise";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Noise/TurbulentNoise";
 
     public override bool ShouldUpdatePosition() => false;
 
@@ -39,7 +39,7 @@ public class Supernova : ModProjectile
         CameraSystem.ScreenShake(60, 0.95f, Projectile.Center);
         CameraSystem.ScreenFlash(1f);
 
-        SoundEngine.PlaySound(new SoundStyle(Stratum.SoundPath + "/Custom/Witch/SolarHellstorm_Supernova"), Projectile.Center);
+        SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_Supernova"), Projectile.Center);
 
         SpawnParticles();
 
@@ -95,12 +95,12 @@ public class Supernova : ModProjectile
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
 
         Main.spriteBatch.End();
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, Stratum.Supernova.Value, Main.GameViewMatrix.TransformationMatrix);
+        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, ShaderManager.Supernova.Value, Main.GameViewMatrix.TransformationMatrix);
 
         Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, texture.Bounds, Projectile.GetAlpha(lightColor), Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.94f, SpriteEffects.None, 0);
 
-        Stratum.Supernova.Value.Parameters["uTime"].SetValue(Main.GlobalTimeWrappedHourly);
-        Stratum.Supernova.Value.Parameters["intensity"].SetValue(intensity);
+        ShaderManager.Supernova.Value.Parameters["uTime"].SetValue(Main.GlobalTimeWrappedHourly);
+        ShaderManager.Supernova.Value.Parameters["intensity"].SetValue(intensity);
 
         Main.spriteBatch.End();
         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);

@@ -12,11 +12,8 @@ sampler2D uImage0 = sampler_state
     AddressV = Wrap;
 };
 
-// hardcoded
-
 static const int NUM_STOPS = 4;
 
-// also hardcoded
 
 static const float stops[NUM_STOPS] =
 {
@@ -26,17 +23,13 @@ static const float stops[NUM_STOPS] =
     0.75
 };
 
-// still hardcoded
-
 static const float3 colors[NUM_STOPS] =
 {
-    float3(0.1, 0.0, 0.0),
+    float3(0.8, 0.2, 0.0),
     float3(0.8, 0.2, 0.0),
     float3(1.0, 0.8, 0.0),
     float3(1.0, 1.0, 1.0)
 };
-
-// shitty gradient map
 
 float3 GradientMap(float t)
 {
@@ -46,8 +39,6 @@ float3 GradientMap(float t)
         return colors[0];
     if (t >= stops[NUM_STOPS - 1])
         return colors[NUM_STOPS - 1];
-    
-    // idk what this does
     
     for (int i = 0; i < NUM_STOPS - 1; i++)
     {
@@ -63,20 +54,22 @@ float3 GradientMap(float t)
 
 float4 Main(float2 coords : TEXCOORD0) : COLOR0
 {
-    coords.x *= 0.1;
+    coords.x *= 0.5;
 
     float4 texColor = tex2D(uImage0, coords - float2(uTime, 0));
 
-    float luminance = texColor.x;
+    float luminance = texColor.r;
     
     float centerYFactor = 1.0 - abs(coords.y * 2.0 - 1.0);
     
-    luminance += smoothstep(0, 1.2, centerYFactor);
-    luminance -= smoothstep(0.3, 0, centerYFactor);
+    float boost = smoothstep(0.0, 1.2, centerYFactor) - smoothstep(0.25, 0.0, centerYFactor);
+    luminance += boost;
     
-    float3 gradientColor = GradientMap(luminance);
+    luminance = saturate(luminance);
 
-    float alpha = smoothstep(0, 0.2, centerYFactor);
+    float3 gradientColor = GradientMap(luminance);
+    
+    float alpha = smoothstep(0.1, 0.2, centerYFactor);
 
     return float4(gradientColor * alpha, texColor.a * alpha);
 }

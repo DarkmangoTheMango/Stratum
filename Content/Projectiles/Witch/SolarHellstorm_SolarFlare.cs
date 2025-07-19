@@ -7,7 +7,7 @@ namespace Stratum.Content.Projectiles.Witch;
 
 public class SolarFlare : ModProjectile
 {
-    public override string Texture => Stratum.AssetPath + "/Textures/Empty";
+    public override string Texture => AssetUtils.AssetPath + "/Textures/Empty";
 
     public bool NoHoming = false;
 
@@ -32,7 +32,7 @@ public class SolarFlare : ModProjectile
 
     public override void OnSpawn(IEntitySource source)
     {
-        SoundEngine.PlaySound(new SoundStyle(Stratum.SoundPath + "/Custom/Witch/SolarHellstorm_SolarFlare") with { PitchVariance = 0.2f, MaxInstances = 5 }, Projectile.Center);
+        SoundEngine.PlaySound(new SoundStyle(AssetUtils.SoundPath + "/Custom/Witch/SolarHellstorm_SolarFlare") with { PitchVariance = 0.2f, MaxInstances = 5 }, Projectile.Center);
     }
 
     public override void AI()
@@ -116,10 +116,7 @@ public class SolarFlare : ModProjectile
         if (Projectile.oldPos[1] == Vector2.Zero)
             return false;
 
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, Stratum.BurningStarShader.Value, Main.GameViewMatrix.TransformationMatrix);
-
-        Texture2D trailTexture = ModContent.Request<Texture2D>(Stratum.AssetPath + "/Textures/Trails/Ugly").Value;
+        Texture2D trailTexture = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/Trails/Ugly").Value;
 
         VertexStrip strip = new VertexStrip();
 
@@ -141,9 +138,6 @@ public class SolarFlare : ModProjectile
 
         Main.graphics.GraphicsDevice.Textures[0] = trailTexture;
         strip.DrawTrail();
-
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 
         return false;
     }
