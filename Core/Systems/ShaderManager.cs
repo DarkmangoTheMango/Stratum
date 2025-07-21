@@ -17,7 +17,8 @@ public class ShaderManager : ModSystem
         BurningStarShader,
         Supernova,
         CelestialSky,
-        DeadlyLaser
+        DeadlyLaser,
+        Shield
         ;
 
     static void LoadEffects()
@@ -26,5 +27,6 @@ public class ShaderManager : ModSystem
         Supernova = ModContent.Request<Effect>($"{EffectPath}/Supernova");
         CelestialSky = ModContent.Request<Effect>($"{EffectPath}/CelestialSky");
         DeadlyLaser = ModContent.Request<Effect>($"{EffectPath}/DeadlyLaser");
+        Shield = ModContent.Request<Effect>($"{EffectPath}/Shield");
     }
 }

@@ -7,12 +7,8 @@
       "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\npcs\\bosses\\witch\\celestialwitch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\content\\projectiles\\witch\\solarhellstorm_solarflare.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\projectiles\\witch\\solarhellstorm_solarflare.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\content\\projectiles\\witch\\starfall_comet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\projectiles\\witch\\starfall_comet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|c:\\users\\skyle\\documents\\my games\\terraria\\tmodloader\\modsources\\stratum\\content\\npcs\\bosses\\witch\\celestialshield.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1FA4A56-E44D-87AD-0DFC-7A13AC8F2F4E}|Stratum.csproj|solutionrelative:content\\npcs\\bosses\\witch\\celestialshield.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,32 +18,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SolarHellstorm_SolarFlare.cs",
-              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Projectiles\\Witch\\SolarHellstorm_SolarFlare.cs",
-              "RelativeDocumentMoniker": "Content\\Projectiles\\Witch\\SolarHellstorm_SolarFlare.cs",
-              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Projectiles\\Witch\\SolarHellstorm_SolarFlare.cs",
-              "RelativeToolTip": "Content\\Projectiles\\Witch\\SolarHellstorm_SolarFlare.cs",
-              "ViewState": "AgIAAGUAAAAAAAAAAAAIwG8AAAAFAAAAAAAAAA==",
+              "Title": "CelestialShield.cs",
+              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\NPCs\\Bosses\\Witch\\CelestialShield.cs",
+              "RelativeDocumentMoniker": "Content\\NPCs\\Bosses\\Witch\\CelestialShield.cs",
+              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\NPCs\\Bosses\\Witch\\CelestialShield.cs",
+              "RelativeToolTip": "Content\\NPCs\\Bosses\\Witch\\CelestialShield.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAwwDIAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-20T21:28:36.756Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Starfall_Comet.cs",
-              "DocumentMoniker": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Projectiles\\Witch\\Starfall_Comet.cs",
-              "RelativeDocumentMoniker": "Content\\Projectiles\\Witch\\Starfall_Comet.cs",
-              "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\Projectiles\\Witch\\Starfall_Comet.cs",
-              "RelativeToolTip": "Content\\Projectiles\\Witch\\Starfall_Comet.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADgAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-20T20:53:56.512Z",
+              "WhenOpened": "2025-07-21T22:56:55.799Z",
               "EditorCaption": ""
             },
             {
@@ -58,7 +41,7 @@
               "RelativeDocumentMoniker": "Content\\NPCs\\Bosses\\Witch\\CelestialWitch.cs",
               "ToolTip": "C:\\Users\\Skyle\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Stratum\\Content\\NPCs\\Bosses\\Witch\\CelestialWitch.cs",
               "RelativeToolTip": "Content\\NPCs\\Bosses\\Witch\\CelestialWitch.cs",
-              "ViewState": "AgIAANsAAAAAAAAAAAAowPUAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAPgAAAAAAAAAAAAQwN0AAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-19T22:35:36.203Z",
               "EditorCaption": ""

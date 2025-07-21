@@ -1,9 +1,11 @@
 ﻿using CalamityMod;
 using CalamityMod.Items.Potions;
 using CalamityMod.Particles;
+using Microsoft.Build.Graph;
 using Stratum.Content.Particles;
 using Stratum.Content.Projectiles.Witch;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Threading;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -49,8 +51,11 @@ public class CelestialWitch : ModNPC
 
     public override void SetStaticDefaults()
     {
+        Main.npcFrameCount[NPC.type] = 1;
+
         NPCID.Sets.MPAllowedEnemies[Type] = true;
         NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
+
         NPCID.Sets.BossBestiaryPriority.Add(Type);
     }
 
@@ -58,7 +63,7 @@ public class CelestialWitch : ModNPC
     {
         NPC.Size = new Vector2(34, 48);
 
-        NPC.lifeMax = 1_000_000;
+        NPC.lifeMax = Main.expertMode ? Main.masterMode ? 3_000_000 : 2_000_000 : 1_000_000;
         NPC.defense = 100;
         NPC.takenDamageMultiplier = 0.75f;
         NPC.knockBackResist = 0;
@@ -102,6 +107,14 @@ public class CelestialWitch : ModNPC
 
         Main.NewText(state);
 
+        foreach (NPC npc in Main.ActiveNPCs)
+        {
+            if (npc.ModNPC is CelestialShield)
+                NPC.immortal = true;
+            else
+                NPC.immortal = false;
+        }
+
         switch (state)
         {
             case AIState.Spawning:
@@ -111,7 +124,7 @@ public class CelestialWitch : ModNPC
                 Shield(120);
                 break;
             case AIState.JudgementCut:
-                JudgementCut(200);
+                JudgementCut(400);
                 break;
             case AIState.Starfall:
                 Starfall(500);
@@ -132,13 +145,31 @@ public class CelestialWitch : ModNPC
 
     void Spawning(int duration)
     {
-        if (PhaseTimer >= duration)
+        if (++PhaseTimer >= duration)
             SetState(AIState.Shield);
     }
 
     void Shield(int duration)
     {
         NPC.velocity *= 0.98f;
+
+        if (PhaseTimer == 60)
+        {
+            bool shieldExists = false;
+
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (npc.type == ModContent.NPCType<CelestialShield>() && npc.ai[0] == NPC.whoAmI)
+                {
+                    shieldExists = true;
+                    break;
+                }
+            }
+
+            if (!shieldExists)
+                NPC.NewNPCDirect(Entity.GetSource_FromAI(), NPC.Center, ModContent.NPCType<CelestialShield>(), 0, NPC.whoAmI);
+        }
+
 
         if (++PhaseTimer >= duration)
             SetState(AIState.JudgementCut);
@@ -148,30 +179,42 @@ public class CelestialWitch : ModNPC
     {
         NPC.velocity *= 0.98f;
 
-        if (PhaseTimer == 0)
+        if (AttackTimer == 60)
+        {
+            CameraSystem.ScreenShake(20, 0.9f, NPC.Center);
+            SoundEngine.PlaySound(new SoundStyle($"{AssetUtils.SoundPath}/Custom/Witch/JudgementCut_Appear"), NPC.Center);
+            Projectile.NewProjectile(Entity.GetSource_FromAI(), NPC.Center, default, ModContent.ProjectileType<JudgementCut>(), 200, 10, Main.myPlayer, NPC.whoAmI);
+            NPC.velocity = NPC.DirectionTo(Target.Center) * 20;
+            NPC.hide = false;
+        }
+
+        if (AttackTimer == 70)
+        {
+            AttackTimer = 0;
+        }
+
+        if (AttackTimer == 0)
         {
             SoundEngine.PlaySound(new SoundStyle($"{AssetUtils.SoundPath}/Custom/Witch/JudgementCut_Vanish"), NPC.Center);
             NPC.hide = true;
             NPC.dontTakeDamage = true;
         }
 
-        if (PhaseTimer == 60)
+        if (AttackTimer == 30)
         {
+            NPC.Center = Target.Center + (Target.velocity.SafeNormalize(Vector2.One.RotatedByRandom(MathHelper.PiOver2)) * 70);
             SoundEngine.PlaySound(new SoundStyle($"{AssetUtils.SoundPath}/Custom/Flash"), NPC.Center);
-            NPC.Center = Target.Center + (Target.velocity * 30);
+
+            for (int i = 0; i < 20; i++)
+                ParticleManager.NewParticle<Sparkle>(NPC.Center, MathUtils.RandomVector2CircularEdge(30) * Main.rand.NextFloat(0.1f, 1f), default, 0);
         }
-        
-        if (PhaseTimer == 90)
-        {
-            CameraSystem.ScreenShake(20, 0.9f, NPC.Center);
-            SoundEngine.PlaySound(new SoundStyle($"{AssetUtils.SoundPath}/Custom/Witch/JudgementCut_Appear"), NPC.Center);
-            NPC.velocity = NPC.DirectionTo(Target.Center) * 20;
-            NPC.hide = false;
-            NPC.dontTakeDamage = false;
-        }
+
+        AttackTimer++;
 
         if (++PhaseTimer >= duration)
         {
+            NPC.hide = false;
+            NPC.dontTakeDamage = false;
             SetState(AIState.Starfall);
         }
     }

@@ -1,11 +1,5 @@
-﻿using CalamityMod.Items.Accessories;
-using CalamityMod.Particles;
+﻿using CalamityMod.Particles;
 using Stratum.Content.Particles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.Graphics;
 
 namespace Stratum.Content.Projectiles.Witch;

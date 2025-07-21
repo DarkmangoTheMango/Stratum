@@ -4,11 +4,13 @@ Projectiles: {
 	SolarFlare.DisplayName: Solar Flare
 	DeadlyLaser.DisplayName: Deadly Laser
 	Comet.DisplayName: Comet
+	JudgementCut.DisplayName: Judgement Cut
 }
 
 NPCs: {
 	CelestialWitch.DisplayName: Celestial Witch
 	TheSkeleton.DisplayName: The Skeleton
+	CelestialShield.DisplayName: Celestial Shield
 }
 
 Buffs: {
