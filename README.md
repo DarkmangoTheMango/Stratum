@@ -1,2 +1,2 @@
 # Stratum
-Repository for the Stratum mod.
+A mod that adds mew bosses.
