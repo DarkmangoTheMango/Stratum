@@ -2,7 +2,7 @@
 
 public static class DrawHelper
 {
-    public static SpriteEffects ToSpriteEffect(this int value, SpriteEffects spriteEffect) => value > 0 ? SpriteEffects.None : spriteEffect;
+    public static SpriteEffects ToSpriteEffect(this int value, SpriteEffects spriteEffect = SpriteEffects.FlipHorizontally) => value > 0 ? SpriteEffects.None : spriteEffect;
 
     public static void WithShader(Effect shader, Action draw)
     {

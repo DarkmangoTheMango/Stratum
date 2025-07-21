@@ -95,7 +95,7 @@ public class SolarFlare : ModProjectile
         behindProjectiles.Add(index);
     }
 
-    Color LerpThreeColors(Color colorA, Color colorB, Color colorC, float progress)
+    static Color LerpThreeColors(Color colorA, Color colorB, Color colorC, float progress)
     {
         if (progress < 0.5f)
         {
@@ -118,7 +118,7 @@ public class SolarFlare : ModProjectile
 
         Texture2D trailTexture = ModContent.Request<Texture2D>(AssetUtils.AssetPath + "/Textures/Trails/Ugly").Value;
 
-        VertexStrip strip = new VertexStrip();
+        VertexStrip strip = new();
 
         strip.PrepareStripWithProceduralPadding(
             positions: Projectile.oldPos,

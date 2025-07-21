@@ -3,9 +3,13 @@ Projectiles: {
 	Supernova.DisplayName: Supernova
 	SolarFlare.DisplayName: Solar Flare
 	DeadlyLaser.DisplayName: Deadly Laser
+	Comet.DisplayName: Comet
 }
 
-NPCs.CelestialWitch.DisplayName: Celestial Witch
+NPCs: {
+	CelestialWitch.DisplayName: Celestial Witch
+	TheSkeleton.DisplayName: The Skeleton
+}
 
 Buffs: {
 	Sunburn: {

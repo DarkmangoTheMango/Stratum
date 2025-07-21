@@ -5,10 +5,12 @@ namespace Stratum.Content.Projectiles.Witch;
 public class DeadlyLaser : ModProjectile
 {
     Vector2[] beamPoints;
-    int pointCount = 20;
-    float beamLength = 800f;
+    readonly int pointCount = 20;
+    readonly float beamLength = 800f;
 
-    public float pointSpacing => beamLength / pointCount;
+    public float PointSpacing => beamLength / pointCount;
+
+    public override string Texture => AssetUtils.Textures.Empty;
 
     public override bool ShouldUpdatePosition() => false;
 
@@ -53,7 +55,7 @@ public class DeadlyLaser : ModProjectile
             float t = i / (float)(beamPoints.Length - 1); // t = 0 (close) to 1 (far)
             float followStrength = MathHelper.Lerp(0.9f, 0.5f, t); // Closer points follow tighter
 
-            Vector2 target = beamPoints[i - 1] + direction * pointSpacing;
+            Vector2 target = beamPoints[i - 1] + direction * PointSpacing;
             beamPoints[i] = Vector2.Lerp(beamPoints[i], target, followStrength);
         }
     }
