@@ -1,2 +1,2 @@
 # Stratum
-A mod that adds mew bosses.
+A mod that adds new bosses.
